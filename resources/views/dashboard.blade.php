@@ -2,6 +2,21 @@
 
 @section('head')
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css" />
+    <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+    <script>
+    // Enable pusher logging - don't include this in production
+    Pusher.logToConsole = true;
+    var pusher = new Pusher('a285e73e8b1d1c78629f', {
+        cluster: 'ap2'
+    });
+    var channel = pusher.subscribe('leaderboard');
+    channel.bind('ScheduleUpdateEvent', function(data) {
+        $("#myTableBox").load(location.href + " #myTableBox");
+        // $('#myTable').DataTable().destroy();
+        // $('#myTable').DataTable().draw();
+        // console.log(JSON.stringify(data));
+    });
+    </script>
 @stop
 
 
@@ -32,9 +47,8 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-12" id="app">
-                            {{-- <leaderboard :current="{{ auth()->user() ? auth()->user()->id : 0 }}"></leaderboard> --}}
-                            <table id="myTable" class="display responsive nowrap" width="100%">
+                        <div class="col-12" id="myTableBox">
+                            <table id="myTable" class="table table-striped table-hover" width="100%">
                                 @php
                                     $currentDate = Carbon\Carbon::now();
                                     $weekDate = Carbon\Carbon::now();
@@ -255,13 +269,9 @@
     <script src="https://code.jquery.com/jquery-3.5.1.js" charset="utf-8"></script>
     <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js" charset="utf-8"></script>
     <script type="text/javascript">
-    $(document).ready(function() {
-        $('#myTable').DataTable( {
-            responsive: true
-        });
-    });
-    </script>
-    <script type="text/javascript">
+        // $('#myTable').DataTable( {
+        //     responsive: true
+        // });
         function RefreshPage() {
             location.reload();
         }

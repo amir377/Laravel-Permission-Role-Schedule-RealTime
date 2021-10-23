@@ -24,6 +24,7 @@ Route::group([
     'namespace' => 'App\Http\Controllers',
 ], function () {
     Route::get('/index' , 'HomeController@index')->name('index');
+    Route::get('/leaderboard' , 'HomeController@leaderboard')->name('leaderboard');
     Route::resource('users', UserController::class);
     Route::resource('schedules', ScheduleController::class);
     Route::post('/schedules/status/change' , 'ScheduleController@statusChange')->name('schedules.status.change');

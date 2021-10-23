@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Schedule;
 use App\Models\Role as RoleManualModel;
-use App\Events\ScheduleUpdated;
+use App\Events\ScheduleUpdateEvent;
 use Carbon\Carbon;
 
 class ScheduleController extends Controller
@@ -72,7 +72,7 @@ class ScheduleController extends Controller
         $newSchedule->end = Carbon::now();
         $newSchedule->save();
 
-        event(new ScheduleUpdated($user)); // `ScheduleUpdated` broadcast event
+        event(new ScheduleUpdateEvent($user));
 
         return redirect()->route('dashboard.schedules.index')->with('success','Schedule created successfully.');
     }
@@ -121,7 +121,7 @@ class ScheduleController extends Controller
         $schedule->end = Carbon::now();
         $schedule->save();
 
-        event(new ScheduleUpdated($user)); // `ScheduleUpdated` broadcast event
+        event(new ScheduleUpdateEvent($user));
 
         return redirect()->route('dashboard.schedules.index')->with('success','Schedule updated successfully');
     }
@@ -150,6 +150,7 @@ class ScheduleController extends Controller
     public function destroy(Schedule $schedule)
     {
         $schedule->delete();
+        event(new ScheduleUpdateEvent(Auth::user()));
         return redirect()->route('dashboard.schedules.index')->with('success','Schedule deleted successfully');
     }
 }

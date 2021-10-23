@@ -58,7 +58,7 @@
                                                 @endcan
                                                 @csrf
                                                 @method('DELETE')
-                                                @can('schedule-delete')
+                                                @can('schedule-destroy')
                                                     <button type="submit" class="btn btn-danger">Delete</button>
                                                 @endcan
                                             </form>

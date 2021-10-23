@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use App\Models\Role as RoleManualModel;
+use App\Events\ScheduleUpdateEvent;
 
 class RegisteredUserController extends Controller
 {
@@ -49,6 +50,8 @@ class RegisteredUserController extends Controller
 
         $roleWorker = RoleManualModel::where('name', 'Worker')->get()->first();
         $user->assignRole([$roleWorker->id]);
+
+        event(new ScheduleUpdateEvent($user));
 
         event(new Registered($user));
 

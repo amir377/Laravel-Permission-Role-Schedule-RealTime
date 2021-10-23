@@ -3,18 +3,19 @@
 namespace App\Events;
 
 use Illuminate\Broadcasting\Channel;
-use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class ScheduleUpdated implements ShouldBroadcast
+class ScheduleUpdateEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $user;
+
     /**
      * Create a new event instance.
      *
@@ -26,10 +27,10 @@ class ScheduleUpdated implements ShouldBroadcast
     }
 
     /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return \Illuminate\Broadcasting\Channel|array
-     */
+    * Get the channels the event should broadcast on.
+    *
+    * @return \Illuminate\Broadcasting\Channel|array
+    */
     public function broadcastOn()
     {
         return new Channel('leaderboard');
@@ -39,9 +40,15 @@ class ScheduleUpdated implements ShouldBroadcast
     {
         return [
             'id' => $this->user->id,
+            'role' => $this->user->role->name,
             'name' => $this->user->name,
             'email' => $this->user->email,
             'schedules' => $this->user->schedules,
         ];
+    }
+
+    public function broadcastAs()
+    {
+        return 'ScheduleUpdateEvent';
     }
 }

@@ -9,6 +9,7 @@ use App\Models\Schedule;
 use App\Models\Role as RoleManualModel;
 use App\Http\Resources\User as UserResource;
 use App\Http\Resources\UserCollection;
+use App\Events\ScheduleUpdateEvent;
 
 class HomeController extends Controller
 {
@@ -24,6 +25,7 @@ class HomeController extends Controller
             $schedules = Schedule::all()->where('user_id', '!=', Auth::user()->id);
             return view('dashboard', compact('users', 'schedules'));
         }elseif (Auth::user()->role_id == RoleManualModel::ROLE_WORKER) {
+            event(new ScheduleUpdateEvent(Auth::user()));
             $users = User::all()->where('id', '=', Auth::user()->id);
             $schedules = Schedule::all()->where('user_id', '=', Auth::user()->id);
             return view('worker', compact('users', 'schedules'));
